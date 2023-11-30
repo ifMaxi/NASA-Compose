@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApodModel(
     @SerialName("copyright")
-    val copyright: String,
+    val copyright: String? = null,
     @SerialName("date")
     val date: String,
     @SerialName("explanation")
