@@ -74,6 +74,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.5.4")
 
     // Viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
