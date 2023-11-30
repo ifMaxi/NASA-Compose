@@ -8,7 +8,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,7 +20,7 @@ fun AppTopBar(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 ) {
     CenterAlignedTopAppBar(
-        modifier = modifier,
+        modifier = modifier.shadow(20.dp),
         title = {
             Text(text = stringResource(id = title))
         },
