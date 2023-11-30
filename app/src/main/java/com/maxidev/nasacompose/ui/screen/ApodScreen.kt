@@ -1,5 +1,7 @@
 package com.maxidev.nasacompose.ui.screen
 
+/* Created by Pelizzoni Maximiliano on 23/11/2023 */
+
 import android.content.Context
 import android.content.res.Configuration
 import androidx.annotation.StringRes
@@ -22,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.WifiOff
@@ -30,16 +31,18 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,57 +62,74 @@ import coil.request.ImageRequest
 import com.maxidev.nasacompose.R
 import com.maxidev.nasacompose.data.model.ApodModel
 import com.maxidev.nasacompose.data.network.ApiResponse
+import com.maxidev.nasacompose.ui.components.AppTopBar
 import com.maxidev.nasacompose.ui.theme.NASAComposeTheme
 import com.maxidev.nasacompose.ui.viewmodel.NasaViewModel
 
-/**
- * In list:
- *
- * - OPTIONAL: Animated image
- * - TEST
- * - Final touches to the main screen
- */
-
+// Shows the app bar and on-screen content.
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApodScreen(
-    //modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     viewmodel: NasaViewModel = viewModel()
 ) {
-    LaunchedEffect(true) {
-        viewmodel.apod
-    }
+    Scaffold(
+        topBar = { AppTopBar(title = R.string.top_bar_apod_title) }
+    ) { paddingValues ->
+        LaunchedEffect(true) {
+            viewmodel.apod
+        }
 
-    ApodNetStatus(apiResponse = viewmodel.apod)
+        ApodNetStatus(
+            apiResponse = viewmodel.apod,
+            modifier = modifier.padding(paddingValues)
+        )
+    }
 }
 
+// Simulate the check Network status.
 @Composable
-private fun ApodNetStatus(apiResponse: ApiResponse) {
+private fun ApodNetStatus(
+    apiResponse: ApiResponse,
+    modifier: Modifier = Modifier
+) {
     when (apiResponse) {
         is ApiResponse.Loading -> ApodLoading()
-        is ApiResponse.Success -> ApodScreenModel(apodModel = apiResponse.data as ApodModel)
+        is ApiResponse.Success -> ApodScreenModel(
+            apodModel = apiResponse.data as ApodModel,
+            modifier = modifier
+        )
         is ApiResponse.Error -> ApodConnectionError(errorText = R.string.connection_problems)
     }
 }
 
+// It will use the parameters of the data model to obtain the data from the API.
 @Composable
-private fun ApodScreenModel(apodModel: ApodModel) {
+private fun ApodScreenModel(
+    apodModel: ApodModel,
+    modifier: Modifier = Modifier
+) {
     ApodScreenContent(
         image = apodModel.hdurl,
         title = apodModel.title,
         description = apodModel.explanation,
-        date = apodModel.date
+        date = apodModel.date,
+        modifier = modifier
     )
 }
 
+// It will be the main screen of the app.
+// It will render the Title, Image, Description and Date composables.
 @Composable
 private fun ApodScreenContent(
     image: String,
     title: String,
     description: String,
-    date: String
+    date: String,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(
                 top = 25.dp,
@@ -129,6 +149,9 @@ private fun ApodScreenContent(
     }
 }
 
+// Card component.
+// It will show the image and description of the day.
+// It will have the "expand" animation that will show and hide the information.
 @Composable
 private fun ApodCard(
     image: String,
@@ -136,7 +159,7 @@ private fun ApodCard(
     elevation: CardElevation = CardDefaults.cardElevation(6.dp),
     scrollState: ScrollState = rememberScrollState()
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -169,6 +192,7 @@ private fun ApodCard(
     }
 }
 
+// The title of the image. It will change every day.
 @Composable
 private fun ApodTitleOfTheDay(title: String) {
     Row(
@@ -179,16 +203,14 @@ private fun ApodTitleOfTheDay(title: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = title
-        )
-        Spacer(modifier = Modifier.width(5.dp))
-        Icon( // Replace Icon with NASA logo
-            imageVector = Icons.Outlined.CalendarToday,
-            contentDescription = null // Only illustrative
+            text = title,
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
 
+// It will display an image daily by calling the Api.
+// Use the Coil library to get the photo from the api.
 @Composable
 private fun ApodImageOfTheDay(
     image: String,
@@ -219,6 +241,8 @@ private fun ApodImageOfTheDay(
     }
 }
 
+// Photo Description.
+// Useful information explained by a NASA professional.
 @Composable
 private fun ApodDescriptionOfTheDay(
     description: String,
@@ -231,11 +255,14 @@ private fun ApodDescriptionOfTheDay(
     ) {
         Text(
             text = description,
-            textAlign = textAlign
+            textAlign = textAlign,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
 
+// It will show the date of the day.
+// It will change automatically every day through the API.
 @Composable
 private fun ApodDateOfTheDay(date: String) {
     Row(
@@ -256,6 +283,8 @@ private fun ApodDateOfTheDay(date: String) {
     }
 }
 
+// "Expandable" button.
+// One of the main components to be able to expand the card component and display information.
 @Composable
 private fun ApodExpandableButton(
     onClick: () -> Unit,
@@ -282,6 +311,7 @@ private fun ApodExpandableButton(
     }
 }
 
+// Simulates an error screen when you do not have internet access.
 @Composable
 private fun ApodConnectionError(
     @StringRes errorText: Int
@@ -305,6 +335,7 @@ private fun ApodConnectionError(
     }
 }
 
+// Simulate a loading screen.
 @Composable
 private fun ApodLoading() {
     Column(
@@ -351,3 +382,5 @@ private fun ApodPreview() {
         }
     }
 }
+
+// NOTE: My fingers hurts.
