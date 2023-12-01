@@ -100,7 +100,8 @@ dependencies {
     implementation("io.coil-kt:coil-video:2.5.0")
     implementation("io.coil-kt:coil-gif:2.5.0")
 
-    // Paging ?
+    // Lottie
+    implementation("com.airbnb.android:lottie-compose:6.2.0")
 
     // Test
     testImplementation("junit:junit:4.13.2")
