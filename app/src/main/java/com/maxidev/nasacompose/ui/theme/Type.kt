@@ -15,13 +15,7 @@ val provider = GoogleFont.Provider(
     certificates = R.array.com_google_android_gms_fonts_certs
 )
 
-val montserratName = GoogleFont("Montserrat")
 val exo2Name = GoogleFont("Exo 2")
-
-val montserratFamily = FontFamily(
-    Font(googleFont = montserratName, fontProvider = provider, weight = FontWeight.Normal),
-    Font(googleFont = montserratName, fontProvider = provider, weight = FontWeight.Medium)
-)
 
 val exo2Family = FontFamily(
     Font(googleFont = exo2Name, fontProvider = provider, weight = FontWeight.Medium),
@@ -37,10 +31,17 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-    titleLarge = TextStyle(
+    titleMedium = TextStyle(
         fontFamily = exo2Family,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = exo2Family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 26.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
