@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Copyright
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.WifiOff
@@ -55,8 +56,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.decode.GifDecoder
+import coil.decode.VideoFrameDecoder
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.maxidev.nasacompose.R
@@ -110,10 +112,11 @@ private fun ApodScreenModel(
     modifier: Modifier = Modifier
 ) {
     ApodScreenContent(
-        image = apodModel.hdurl,
+        image = apodModel.url,
         title = apodModel.title,
         description = apodModel.explanation,
         date = apodModel.date,
+        copyright = apodModel.copyright.toString(),
         modifier = modifier
     )
 }
@@ -126,6 +129,7 @@ private fun ApodScreenContent(
     title: String,
     description: String,
     date: String,
+    copyright: String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -143,7 +147,9 @@ private fun ApodScreenContent(
         ApodTitleOfTheDay(title = title)
         ApodCard(
             image = image,
-            description = description
+            description = description,
+            contentDescription = date,
+            copyright = copyright
         )
         ApodDateOfTheDay(date = date)
     }
@@ -156,6 +162,8 @@ private fun ApodScreenContent(
 private fun ApodCard(
     image: String,
     description: String,
+    contentDescription: String,
+    copyright: String,
     elevation: CardElevation = CardDefaults.cardElevation(6.dp),
     scrollState: ScrollState = rememberScrollState()
 ) {
@@ -178,7 +186,10 @@ private fun ApodCard(
             modifier = Modifier
                 .verticalScroll(state = scrollState),
             content = {
-                ApodImageOfTheDay(image = image)
+                ApodImageOfTheDay(
+                    image = image,
+                    contentDescription = contentDescription
+                )
                 ApodExpandableButton(
                     onClick = { expanded = !expanded },
                     expanded = expanded,
@@ -186,6 +197,7 @@ private fun ApodCard(
                 )
                 if (expanded) {
                     ApodDescriptionOfTheDay(description = description)
+                    ApodPhotoAndCopyright(copyright = copyright)
                 }
             }
         )
@@ -214,6 +226,7 @@ private fun ApodTitleOfTheDay(title: String) {
 @Composable
 private fun ApodImageOfTheDay(
     image: String,
+    contentDescription: String,
     context: Context = LocalContext.current,
     cachePolicy: CachePolicy = CachePolicy.ENABLED,
     clipShape: Shape = RoundedCornerShape(5)
@@ -222,6 +235,7 @@ private fun ApodImageOfTheDay(
         .data(image)
         .crossfade(true)
         .decoderFactory(GifDecoder.Factory())
+        .decoderFactory(VideoFrameDecoder.Factory())
         .memoryCachePolicy(cachePolicy)
         .diskCachePolicy(cachePolicy)
         .build()
@@ -231,10 +245,15 @@ private fun ApodImageOfTheDay(
             .padding(10.dp),
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = imageRequest,
-            contentDescription = "Nasa: Image of the day",
+            contentDescription = contentDescription,
             contentScale = ContentScale.Fit,
+            loading = {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            },
             modifier = Modifier
                 .clip(clipShape)
         )
@@ -279,6 +298,29 @@ private fun ApodDateOfTheDay(date: String) {
         Icon(
             imageVector = Icons.Outlined.CalendarMonth,
             contentDescription = null // Only illustrative
+        )
+    }
+}
+
+// Copyright info
+@Composable
+private fun ApodPhotoAndCopyright(copyright: String) {
+    val copyContains = copyright.replace("\n", "")
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Copyright,
+            contentDescription = null // Only illustrative
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(
+            text = "Copyright: $copyContains"
         )
     }
 }
@@ -384,3 +426,4 @@ private fun ApodPreview() {
 }
 
 // NOTE: My fingers hurts.
+// TODO: Fix my fingers.
