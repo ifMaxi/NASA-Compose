@@ -3,6 +3,7 @@ package com.maxidev.nasacompose.ui.screen
 /* Created by Pelizzoni Maximiliano on 23/11/2023 */
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +32,15 @@ import com.maxidev.nasacompose.R
 // Welcome screen to the app.
 // Shows an animated image of Lottie.
 @Composable
-fun StartScreen(modifier: Modifier = Modifier) {
+fun StartScreen(
+    modifier: Modifier = Modifier,
+    onNavigation: () -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(6.dp),
+            .padding(6.dp)
+            .clickable { onNavigation() },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

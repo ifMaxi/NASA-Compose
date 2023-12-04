@@ -55,7 +55,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import coil.decode.GifDecoder
 import coil.decode.VideoFrameDecoder
@@ -73,7 +73,7 @@ import com.maxidev.nasacompose.ui.viewmodel.NasaViewModel
 @Composable
 fun ApodScreen(
     modifier: Modifier = Modifier,
-    viewmodel: NasaViewModel = viewModel()
+    viewmodel: NasaViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = { AppTopBar(title = R.string.top_bar_apod_title) }
