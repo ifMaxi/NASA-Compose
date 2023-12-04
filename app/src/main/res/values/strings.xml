@@ -3,4 +3,7 @@
     <string name="top_bar_apod_title">Nasa Apod</string>
     <string name="info">Info</string>
     <string name="connection_problems">There was an internet connection problem.</string>
+    <string name="discover_cosmos">Discover the cosmos!</string>
+    <string name="welcome">Welcome to NASA Compose</string>
+    <string name="info_experts">Get information and content explained by NASA experts.</string>
 </resources>
