@@ -17,9 +17,6 @@ import javax.inject.Inject
 class NasaViewModel @Inject constructor(
     private val repositoryImpl: NasaRepositoryImpl
 ): ViewModel() {
-//    private val _apod = MutableStateFlow<ApiResponse>
-//    var apod: ApiResponse = _apod.asStateFlow()
-
     var apod: ApiResponse by mutableStateOf(ApiResponse.Loading)
         private set
 
