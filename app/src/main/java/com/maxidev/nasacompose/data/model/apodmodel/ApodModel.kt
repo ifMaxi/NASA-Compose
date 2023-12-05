@@ -1,4 +1,4 @@
-package com.maxidev.nasacompose.data.model
+package com.maxidev.nasacompose.data.model.apodmodel
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
