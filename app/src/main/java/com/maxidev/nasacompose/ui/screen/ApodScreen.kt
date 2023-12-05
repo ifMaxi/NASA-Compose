@@ -62,7 +62,7 @@ import coil.decode.VideoFrameDecoder
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.maxidev.nasacompose.R
-import com.maxidev.nasacompose.data.model.ApodModel
+import com.maxidev.nasacompose.data.model.apodmodel.ApodModel
 import com.maxidev.nasacompose.data.network.ApiResponse
 import com.maxidev.nasacompose.ui.components.AppTopBar
 import com.maxidev.nasacompose.ui.theme.NASAComposeTheme
