@@ -27,9 +27,7 @@ fun NavGraph(
                 }
             )
         }
-        composable(
-            route = Destinations.APOD_SCREEN.route
-        ) {
+        composable(route = Destinations.APOD_SCREEN.route) {
             ApodScreen()
         }
     }

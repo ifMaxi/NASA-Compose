@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +26,6 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Copyright
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
-import androidx.compose.material.icons.outlined.WifiOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
@@ -96,12 +94,12 @@ private fun ApodNetStatus(
     modifier: Modifier = Modifier
 ) {
     when (apiResponse) {
-        is ApiResponse.Loading -> ApodLoading()
+        is ApiResponse.Loading -> Loading()
         is ApiResponse.Success -> ApodScreenModel(
             apodModel = apiResponse.data as ApodModel,
             modifier = modifier
         )
-        is ApiResponse.Error -> ApodConnectionError(errorText = R.string.connection_problems)
+        is ApiResponse.Error -> ConnectionError(errorText = R.string.connection_problems)
     }
 }
 
@@ -353,45 +351,6 @@ private fun ApodExpandableButton(
     }
 }
 
-// Simulates an error screen when you do not have internet access.
-@Composable
-private fun ApodConnectionError(
-    @StringRes errorText: Int
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.WifiOff,
-            contentDescription = null,
-            modifier = Modifier
-                .size(90.dp)
-        )
-        Text(
-            text = stringResource(id = errorText)
-        )
-    }
-}
-
-// Simulate a loading screen.
-@Composable
-private fun ApodLoading() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        content = {
-            CircularProgressIndicator()
-        }
-    )
-}
-
 @Preview(
     name = "Light Mode",
     showBackground = true,
@@ -417,13 +376,10 @@ private fun ApodPreview() {
 //                        description = R.string.lorem_ipsum,
 //                        date = "2023/11/27"
 //                    )
-                    ApodLoading()
-                    ApodConnectionError(errorText = R.string.connection_problems)
+//                    ApodLoading()
+//                    ApodConnectionError(errorText = R.string.connection_problems)
                 }
             )
         }
     }
 }
-
-// NOTE: My fingers hurts.
-// TODO: Fix my fingers.
