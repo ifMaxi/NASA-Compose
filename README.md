@@ -15,7 +15,7 @@ An app that shows the Astronomical Image of the Day and its description by a NAS
 - Lottie (For an animated image on startup.)
 - Downloaded Font
 
-### Arquitecture
+### Architecture
 
 The type of architecture used for this project was MVVM(Model-View-ViewModel). This being the architecture recommended by Google to create and work on Android applications.
 
