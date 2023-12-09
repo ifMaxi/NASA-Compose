@@ -25,6 +25,12 @@ This is divided into the:
 - View: Which represents the UI
 - ViewModel: Which represents the bridge between the View and the Model
 
+## Note
+
+Please. In order to access the content of the app, in this case the image and its description, you will need your own API KEY that you can obtain from the same page provided above.
+
+Once you have your API KEY you will need to place it in a "local.properties" file and configure it in your Build.Gradle.
+
 ### Screenshots
 
 `TODO: Screenshots`
