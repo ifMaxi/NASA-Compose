@@ -9,3 +9,22 @@ An app that shows the Astronomical Image of the Day and its description by a NAS
 - Material 3
 - Navigation compose
 - Dependency Injection (Dagger/Hilt)
+- Retrofit
+- Kotlin Serialization
+- Coil (With Gif and VideoFrame decoders.)
+- Lottie (For an animated image on startup.)
+- Downloaded Font
+
+### Arquitecture
+
+The type of architecture used for this project was MVVM(Model-View-ViewModel). This being the architecture recommended by Google to create and work on Android applications.
+
+This is divided into the: 
+
+- Model: Which represents the data and business logic
+- View: Which represents the UI
+- ViewModel: Which represents the bridge between the View and the Model
+
+### Screenshots
+
+`TODO: Screenshots`
