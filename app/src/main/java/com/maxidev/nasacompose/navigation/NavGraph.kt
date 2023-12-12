@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.maxidev.nasacompose.ui.screen.ApodScreen
-import com.maxidev.nasacompose.ui.screen.DownloadImageScreen
 import com.maxidev.nasacompose.ui.screen.StartScreen
 
 @Composable
@@ -29,18 +28,7 @@ fun NavGraph(
             )
         }
         composable(route = Destinations.APOD_SCREEN.route) {
-            ApodScreen(
-                onClick = {
-                    navController.navigate(Destinations.DOWNLOAD_IMAGE.route)
-                }
-            )
-        }
-        composable(route = Destinations.DOWNLOAD_IMAGE.route) {
-            DownloadImageScreen(
-                onPopBackStack = {
-                    navController.popBackStack()
-                }
-            )
+            ApodScreen()
         }
     }
 }
