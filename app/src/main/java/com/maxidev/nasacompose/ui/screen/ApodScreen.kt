@@ -2,13 +2,13 @@ package com.maxidev.nasacompose.ui.screen
 
 /* Created by Pelizzoni Maximiliano on 23/11/2023 */
 
-import android.content.Context
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,11 +26,10 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Copyright
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +45,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -60,6 +58,7 @@ import coil.decode.VideoFrameDecoder
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.maxidev.nasacompose.R
+import com.maxidev.nasacompose.data.download.AndroidDownloader
 import com.maxidev.nasacompose.data.model.apodmodel.ApodModel
 import com.maxidev.nasacompose.data.network.ApiResponse
 import com.maxidev.nasacompose.ui.components.AppTopBar
@@ -67,7 +66,6 @@ import com.maxidev.nasacompose.ui.theme.NASAComposeTheme
 import com.maxidev.nasacompose.ui.viewmodel.NasaViewModel
 
 // Shows the app bar and on-screen content.
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApodScreen(
     modifier: Modifier = Modifier,
@@ -109,13 +107,20 @@ private fun ApodScreenModel(
     apodModel: ApodModel,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val downloader = AndroidDownloader(context)
+
     ApodScreenContent(
         image = apodModel.url,
         title = apodModel.title,
         description = apodModel.explanation,
         date = apodModel.date,
         copyright = apodModel.copyright.toString(),
-        modifier = modifier
+        modifier = modifier,
+        onDownload = {
+            downloader.downloadFile(apodModel.url)
+            Toast.makeText(context, R.string.downloading_toast, Toast.LENGTH_SHORT).show()
+        }
     )
 }
 
@@ -128,7 +133,8 @@ private fun ApodScreenContent(
     description: String,
     date: String,
     copyright: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDownload: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -147,7 +153,8 @@ private fun ApodScreenContent(
             image = image,
             description = description,
             contentDescription = date,
-            copyright = copyright
+            copyright = copyright,
+            onDownload = onDownload
         )
         ApodDateOfTheDay(date = date)
     }
@@ -162,10 +169,12 @@ private fun ApodCard(
     description: String,
     contentDescription: String,
     copyright: String,
-    elevation: CardElevation = CardDefaults.cardElevation(6.dp),
-    scrollState: ScrollState = rememberScrollState()
+    onDownload: () -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+    val elevation = CardDefaults.cardElevation(6.dp)
+    val cardColor = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant)
 
     Card(
         modifier = Modifier
@@ -178,7 +187,7 @@ private fun ApodCard(
             )
             .padding(10.dp),
         elevation = elevation,
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
+        colors = cardColor,
     ) {
         Column(
             modifier = Modifier
@@ -186,7 +195,8 @@ private fun ApodCard(
             content = {
                 ApodImageOfTheDay(
                     image = image,
-                    contentDescription = contentDescription
+                    contentDescription = contentDescription,
+                    onDownload = onDownload
                 )
                 ApodExpandableButton(
                     onClick = { expanded = !expanded },
@@ -225,10 +235,11 @@ private fun ApodTitleOfTheDay(title: String) {
 private fun ApodImageOfTheDay(
     image: String,
     contentDescription: String,
-    context: Context = LocalContext.current,
-    cachePolicy: CachePolicy = CachePolicy.ENABLED,
-    clipShape: Shape = RoundedCornerShape(5)
+    onDownload: () -> Unit
 ) {
+    val context = LocalContext.current
+    val cachePolicy = CachePolicy.ENABLED
+
     val imageRequest = ImageRequest.Builder(context)
         .data(image)
         .crossfade(true)
@@ -241,7 +252,7 @@ private fun ApodImageOfTheDay(
     Box(
         modifier = Modifier
             .padding(10.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopEnd
     ) {
         SubcomposeAsyncImage(
             model = imageRequest,
@@ -253,7 +264,15 @@ private fun ApodImageOfTheDay(
                 )
             },
             modifier = Modifier
-                .clip(clipShape)
+                .clip(RoundedCornerShape(5))
+        )
+        Icon(
+            imageVector = Icons.Outlined.FileDownload,
+            contentDescription = "Download Image",
+            tint = MaterialTheme.colorScheme.background,
+            modifier = Modifier
+                .padding(10.dp)
+                .clickable { onDownload() }
         )
     }
 }
@@ -261,10 +280,7 @@ private fun ApodImageOfTheDay(
 // Photo Description.
 // Useful information explained by a NASA professional.
 @Composable
-private fun ApodDescriptionOfTheDay(
-    description: String,
-    textAlign: TextAlign = TextAlign.Justify
-) {
+private fun ApodDescriptionOfTheDay(description: String) {
     Column(
         modifier = Modifier
             .padding(15.dp),
@@ -272,7 +288,7 @@ private fun ApodDescriptionOfTheDay(
     ) {
         Text(
             text = description,
-            textAlign = textAlign,
+            textAlign = TextAlign.Justify,
             style = MaterialTheme.typography.bodyLarge
         )
     }

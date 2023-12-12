@@ -19,9 +19,7 @@ import androidx.compose.ui.unit.dp
 
 // Simulates an error screen when you do not have internet access.
 @Composable
-fun ConnectionError(
-    @StringRes errorText: Int
-) {
+fun ConnectionError(@StringRes errorText: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()

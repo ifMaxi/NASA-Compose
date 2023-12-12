@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,9 +18,10 @@ fun AppButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     @StringRes text: Int,
-    onClick: () -> Unit,
-    iconSpacing: Dp = ButtonDefaults.IconSpacing
+    onClick: () -> Unit
 ) {
+    val iconSpacing = ButtonDefaults.IconSpacing
+
     Button(
         onClick = onClick,
         modifier = modifier,
