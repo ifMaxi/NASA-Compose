@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
 
+// Download functionality.
+// Thanks to Philipp Lackner for his video on this topic to be able to place this functionality.
 class AndroidDownloader(
     private val context: Context
 ): Downloader {
