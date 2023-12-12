@@ -6,4 +6,7 @@
     <string name="discover_cosmos">Discover the cosmos!</string>
     <string name="welcome">Welcome to NASA Compose</string>
     <string name="info_experts">Get information and content explained by NASA experts.</string>
+    <string name="download">Download</string>
+    <string name="download_preview">Download preview</string>
+    <string name="downloading_toast">Downloading</string>
 </resources>
