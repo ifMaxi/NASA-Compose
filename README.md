@@ -1,8 +1,8 @@
 # NASA Compose
 
-An app that shows the Astronomical Image of the Day and its description by a NASA expert. Use the APOD api of the page [NASA Open APIs](https://api.nasa.gov/).
+An app that shows the Astronomical Image of the Day and its description by a NASA expert and that allows you to download the image. Use the APOD api of the page [NASA Open APIs](https://api.nasa.gov/).
 
-### Components and libraries
+## Components and libraries
 
 - Kotlin
 - Jetpack compose
@@ -14,8 +14,9 @@ An app that shows the Astronomical Image of the Day and its description by a NAS
 - Coil (With Gif and VideoFrame decoders.)
 - Lottie (For an animated image on startup.)
 - Downloaded Font
+- DownloadManager (To download the image)
 
-### Architecture
+## Architecture
 
 The type of architecture used for this project was MVVM(Model-View-ViewModel). This being the architecture recommended by Google to create and work on Android applications.
 
@@ -31,7 +32,7 @@ Please. In order to access the content of the app, in this case the image and it
 
 Once you have your API KEY you will need to place it in a "local.properties" file and configure it in your Build.Gradle.
 
-### Screenshots
+## Screenshots
 
 <img src="https://github.com/ifMaxi/NASACompose/assets/112733459/ec2d8ea6-c9e2-4f89-9493-ad2ecf10ccd2" width="400" height="800">
 <img src="https://github.com/ifMaxi/NASACompose/assets/112733459/156edbf2-1837-42ef-98f3-0a04fadcfa86" width="400" height="800">
